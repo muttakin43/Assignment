@@ -1,6 +1,7 @@
 ﻿using Assignment.DAL.Context;
 using Assignment.DAL.Interface;
 using Assignment.Model;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,29 +19,37 @@ namespace Assignment.DAL.Implementation
         {
             _context = context;
         }
-        public Task AddAsync(Product product)
+
+        public async Task<List<Product>> GetAllAsync()
+    => await _context.Products.ToListAsync();
+
+        public async Task<Product?> GetByIdAsync(int id)
+    => await _context.Products.FindAsync(id);
+
+        public async Task AddAsync(Product product)
         {
-            throw new NotImplementedException();
+           _context.Products.Add(product);
+              await  _context.SaveChangesAsync();
         }
 
-        public Task DeleteAsync(int id)
+        public async Task UpdateAsync(Product product)
         {
-            throw new NotImplementedException();
+          _context.Products.Update(product);
+            await _context.SaveChangesAsync();
         }
 
-        public Task<List<Product>> GetAllAsync()
+        public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+           var product = await _context.Products.FindAsync(id);
+            if (product != null)
+            {
+                _context.Products.Remove(product);
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public Task<Product?> GetByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
+       
 
-        public Task UpdateAsync(Product product)
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }

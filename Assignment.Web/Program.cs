@@ -1,4 +1,7 @@
+using Assignment.BLL.Services;
 using Assignment.DAL.Context;
+using Assignment.DAL.Implementation;
+using Assignment.DAL.Interface;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +12,10 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<AssignDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AssignmentConnection")));
+
+
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ProductService>();
 
 var app = builder.Build();
 
@@ -29,6 +36,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Product}/{action=Index}/{id?}");
 
 app.Run();
